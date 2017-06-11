@@ -1,0 +1,21 @@
+<% if User.current.allowed_to?(:manage_issue_relations, @project) %>
+
+  <div id="relations">
+    <p>
+      <label>
+        <%=l(:label_related_issues)%>
+      </label>
+
+      <%= select_tag 'relation[relation_type]', options_for_select(collection_for_relation_type_select), :onchange => "setPredecessorFieldsVisibility();" %>
+      <%= l(:label_issue) %> #<%= text_field_tag 'relation[issue_to_id]', '', :size => 10 %>
+      <span id="predecessor_fields" style="display:none;">
+        <%= l(:field_delay) %>: <%= text_field_tag 'relation[delay]', '', :size => 3 %> <%= l(:label_day_plural) %>
+      </span>
+    </p>
+
+    <%= javascript_tag "observeAutocompleteField('relation_issue_to_id', '#{escape_javascript auto_complete_issues_path(:project_id => @project, :scope => (Setting.cross_project_issue_relations? ? 'all' : nil))}')" %>
+    <%= javascript_tag "setPredecessorFieldsVisibility();" %>
+  </div>
+
+<% end %>
+
