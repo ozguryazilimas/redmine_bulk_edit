@@ -8,7 +8,7 @@ Redmine::Plugin.register :redmine_bulk_edit do
   version '0.5.0'
   url 'http://www.ozguryazilim.com.tr'
   author_url 'http://www.ozguryazilim.com.tr'
-  requires_redmine :version_or_higher => '3.3.0'
+  requires_redmine :version_or_higher => '3.0.7'
 end
 
 
