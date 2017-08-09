@@ -11,4 +11,13 @@ Redmine::Plugin.register :redmine_bulk_edit do
   requires_redmine :version_or_higher => '3.0.7'
 end
 
+Rails.configuration.to_prepare do
+  [
+    [Issue, RedmineBulkEdit::Patches::IssuePatch]
+  ].each do |classname, modulename|
+    unless classname.included_modules.include?(modulename)
+      classname.send(:include, modulename)
+    end
+  end
+end
 

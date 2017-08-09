@@ -20,16 +20,21 @@ module RedmieBulkEdit
                                 .where(:issue_to_id => issue_to_id)
                                 .first_or_initialize
 
-        # manually init journal of only issue_to because issue_from is stale now
-        relation.issue_to.init_journal(User.current)
+        begin
+          # manually init journal of only issue_to because issue_from is stale now
+          relation.issue_to.init_journal(User.current)
 
-        relation.safe_attributes = relation_params.slice(:relation_type, :delay)
-        relation.save!
+          relation.safe_attributes = relation_params.slice(:relation_type, :delay)
+          relation.save!
 
-        # build journals manually, and different for different issues
-        context[:issue].current_journal.journalize_relation(relation, :added)
-        # override private block the way Redmine does
-        relation.issue_to.send :relation_added, relation
+          # build journals manually, and different for different issues
+          context[:issue].current_journal.journalize_relation(relation, :added)
+          # override private block the way Redmine does
+          relation.issue_to.send :relation_added, relation
+        rescue => e
+          # can not do errors.add here as they will be cleaned up by validation
+          context[:issue].redmine_bulk_edit_validation_error = e.message
+        end
       end
 
     end
