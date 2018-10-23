@@ -8,7 +8,6 @@ module RedmineBulkEdit
         base.send(:include, InstanceMethods)
 
         base.class_eval do
-          unloadable
           before_validation :redmine_bulk_edit_validate
 
           attr_accessor :redmine_bulk_edit_validation_error
